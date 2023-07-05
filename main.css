@@ -1,7 +1,7 @@
 body {
-	background-color: #000;
-	color: #fcf2fc;
-	font-family: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
+	background-color: #fffad9;
+	color: #9b7400;
+	font-family: 'McLaren', cursive;
 	overflow: clip;
 }
 
@@ -81,20 +81,26 @@ form[method="dialog"]:focus-within {
 .file-upload {
 	display: flex;
 	flex-direction: column;
-	font-family: Superclarendon, 'Bookman Old Style', 'URW Bookman', 'URW Bookman L', 'Georgia Pro', Georgia, serif;
 	font-size: 2rem;
 	padding: 16px;
 }
 
 label[for="file-upload"] {
-	border: 2px dashed transparent;
+	border: 2px dashed #9b74009a;
 	border-radius: 2px;
-	flex-grow: 1;
-	transition: border-color 0.15s ease-in;
+	cursor: pointer;
+	margin: auto;
+	min-height: auto;
+	padding: 32px;
+	user-select: none;
 }
 
 label[for="file-upload"]:hover {
-	border-color: #fcf2fc9a;
+	border-color: currentColor;
+}
+
+label[for="file-upload"]:focus-within {
+	background-color: #fff;
 }
 
 .img-container {

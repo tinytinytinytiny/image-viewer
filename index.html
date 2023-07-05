@@ -2,6 +2,9 @@
 <html lang="en">
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=McLaren&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="https://unpkg.com/tiny-css-reset/dist/reset.min.css" />
 	<link rel="stylesheet" href="main.css">
 	<link rel="icon" type="image/png" href="favicon/favicon-160px.png">
@@ -13,8 +16,10 @@
 	<body>
 		<main class="center-contents min-h-inherit">
 			<div id="drop-zone" class="file-upload w-full min-h-inherit">
-				<label for="file-upload" class="center-contents">Upload an image</label>
-				<input class="visually-hidden" id="file-upload" type="file" accept="image/*">
+				<label for="file-upload" class="center-contents">
+					Upload an image
+					<input class="visually-hidden" id="file-upload" type="file" accept="image/*">
+				</label>
 			</div>
 		</main>
 		<dialog id="preview">
