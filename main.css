@@ -1,8 +1,16 @@
-body {
-	background-color: #fffad9;
-	color: #9b7400;
-	font-family: 'McLaren', cursive;
+html, body {
 	overflow: clip;
+}
+
+body {
+	background-color: #fffef3;
+	color: #735d1a;
+	font-family: 'McLaren', cursive;
+	min-height: 100dvh;
+}
+
+button {
+	cursor: pointer;
 }
 
 dialog {
@@ -25,10 +33,7 @@ dialog:focus {
 }
 
 dialog::backdrop {
-	background-image: var(--bg-img);
-	background-repeat: no-repeat;
-	background-position: center;
-	background-size: cover;
+	background: center / cover no-repeat var(--bg-img) #fffef3;
 }
 
 form[method="dialog"] {
@@ -86,21 +91,33 @@ form[method="dialog"]:focus-within {
 }
 
 label[for="file-upload"] {
-	border: 2px dashed #9b74009a;
-	border-radius: 2px;
+	background-color: #ffec71;
+	border-radius: 4px;
 	cursor: pointer;
+	flex-direction: column;
+	gap: 0.5rem;
 	margin: auto;
 	min-height: auto;
-	padding: 32px;
+	outline: 2px dashed #735d1a9a;
+	outline-offset: -8px;
+	padding: 38px;
 	user-select: none;
 }
 
 label[for="file-upload"]:hover {
+	background-color: #ffe229;
 	border-color: currentColor;
 }
 
 label[for="file-upload"]:focus-within {
-	background-color: #fff;
+	background-color: #574100;
+	color: #fffef3;
+	outline-color: currentColor;
+}
+
+label[for="file-upload"] svg {
+	height: auto;
+	width: 4rem;
 }
 
 .img-container {

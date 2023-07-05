@@ -37,6 +37,37 @@ function showPreview(file) {
 		const originalWidth = img.width;
 		const originalHeight = img.height;
 		let height = Math.min(windowHeight, img.height);
+		let y;
+
+		function onDrag(event) {
+			if (!event.currentTarget.hasAttribute('data-pointerdown')) return;
+			const { scrollTop, scrollHeight } = imgContainer;
+			const dy = event.clientY - y;
+			imgContainer.scrollTop = Math.min(scrollHeight, Math.max(0, scrollTop - dy));
+			y = event.clientY;
+		}
+
+		function setImageHeight(newHeight) {
+			const maxHeight = clampHeightToWindow(originalHeight);
+			const oldHeight = height;
+			const oldTop = imgContainer.scrollTop;
+			height = clampHeightToWindow(newHeight);
+			imgContainer.firstElementChild.style.height = `${height}px`;
+			if (oldHeight < maxHeight) {
+				imgContainer.scrollTop = Math.min(
+					height - windowHeight,
+					oldTop + (height - oldHeight) / 2
+				);
+			}
+		}
+
+		function clampHeightToWindow(height) {
+			return Math.max(
+				Math.min(windowHeight, originalHeight),
+				Math.min(originalHeight, Math.min(height, proportion({ x1: originalWidth, y1: originalHeight, x2: windowWidth })))
+			);
+		}
+		
 		img.setAttribute('width', img.width);
 		img.setAttribute('height', img.height);
 		img.setAttribute('alt', '');
@@ -54,58 +85,33 @@ function showPreview(file) {
 		}
 
 		preview.addEventListener('pointermove', (event) => {
-			if (event.clientY < 0.16 * windowHeight) {
+			if (event.clientY < 0.16 * windowHeight || event.clientY <= 68) {
 				preview.classList.add('show-controls');
 			} else {
 				preview.classList.remove('show-controls');
 			}
 		});
 
-		preview.querySelectorAll('.img-container').forEach((el) => {
-			let y;
+		imgContainer.addEventListener('pointerdown', (event) => {
+			y = event.clientY;
+			imgContainer.setAttribute('data-pointerdown', '');
+			imgContainer.addEventListener('pointermove', onDrag);
+		});
 
-			el.addEventListener('pointerdown', (event) => {
-				y = event.clientY;
-				el.setAttribute('data-pointerdown', '');
-				el.addEventListener('pointermove', onDrag);
-			});
+		imgContainer.addEventListener('pointerup', (y) => {
+			imgContainer.getAttribute('data-pointerdown');
+			imgContainer.removeAttribute('data-pointerdown');
+			imgContainer.removeEventListener('pointermove', onDrag);
+		});
 
-			el.addEventListener('pointerup', (y) => {
-				el.getAttribute('data-pointerdown');
-				el.removeAttribute('data-pointerdown');
-				el.removeEventListener('pointermove', onDrag);
-			});
+		imgContainer.addEventListener('wheel', (event) => {
+			setImageHeight(height + event.deltaY);
+		});
 
-			el.addEventListener('wheel', (event) => {
-				height = clampHeightToWindow(height + event.deltaY);
-				el.firstElementChild.style.height = `${height}px`;
-			});
-
-			window.addEventListener('resize', () => {
-				windowHeight = window.innerHeight;
-				windowWidth = window.innerWidth;
-				height = clampHeightToWindow(height);
-				el.firstElementChild.style.height = `${height}px`;
-			});
-
-			function clampHeightToWindow(height) {
-				return Math.max(
-					Math.min(windowHeight, originalHeight),
-					Math.min(originalHeight, Math.min(height, getMaxHeight(originalWidth, originalHeight, windowWidth)))
-				);
-
-				function getMaxHeight(width, height, maxWidth) {
-					return maxWidth * height / width;
-				}
-			}
-
-			function onDrag(event) {
-				if (!event.currentTarget.hasAttribute('data-pointerdown')) return;
-				const { scrollTop, scrollHeight } = el;
-				const dy = event.clientY - y;
-				el.scrollTop = Math.min(scrollHeight, Math.max(0, scrollTop - dy));
-				y = event.clientY;
-			}
+		window.addEventListener('resize', () => {
+			windowHeight = window.innerHeight;
+			windowWidth = window.innerWidth;
+			setImageHeight(height);
 		});
 
 		preview.showModal();
@@ -132,6 +138,10 @@ function showPreview(file) {
 		cursorVisible = false;
 	}
 })();
+
+function proportion({ x1, y1, x2 } = {}) {
+	return x2 * y1 / x1;
+}
 
 function debounce(func, timeout = 300) {
 	let timer;
